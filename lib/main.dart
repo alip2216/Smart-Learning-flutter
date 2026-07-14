@@ -4,6 +4,7 @@ import 'providers/auth_provider.dart';
 import 'providers/project_provider.dart';
 import 'providers/log_provider.dart';
 import 'providers/chat_provider.dart';
+import 'providers/explore_chat_provider.dart';
 import 'screens/splash_screen.dart';
 import 'utils/notification_service.dart';
 
@@ -18,6 +19,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ProjectProvider()),
         ChangeNotifierProvider(create: (_) => LogProvider()),
         ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (_) => ExploreChatProvider()),
       ],
       child: const MyApp(),
     ),
