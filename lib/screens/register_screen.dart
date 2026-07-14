@@ -42,8 +42,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Registrasi gagal, coba lagi.'),
+        SnackBar(
+          content: Text(provider.errorMessage ?? 'Registrasi gagal, coba lagi.'),
           backgroundColor: Colors.redAccent,
         ),
       );
