@@ -19,7 +19,15 @@ class AuthService {
       final data = jsonDecode(response.body);
       return data['token'] ?? data['access_token'];
     } else {
-      throw Exception('Gagal login: ${response.statusCode}');
+      try {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['message'] ?? 'Gagal login: ${response.statusCode}');
+      } catch (e) {
+        if (e is FormatException) {
+          throw Exception('Gagal login: ${response.statusCode}');
+        }
+        rethrow;
+      }
     }
   }
 
@@ -41,7 +49,15 @@ class AuthService {
       final data = jsonDecode(response.body);
       return data['token'] ?? data['access_token'];
     } else {
-      throw Exception('Gagal mendaftar: ${response.statusCode}');
+      try {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['message'] ?? 'Gagal mendaftar: ${response.statusCode}');
+      } catch (e) {
+        if (e is FormatException) {
+          throw Exception('Gagal mendaftar: ${response.statusCode}');
+        }
+        rethrow;
+      }
     }
   }
 
