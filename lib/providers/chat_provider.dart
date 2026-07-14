@@ -20,7 +20,8 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      _chats = await _chatService.getChats(token, projectId);
+      final fetchedChats = await _chatService.getChats(token, projectId);
+      _chats = fetchedChats.map(_interceptErrorMessage).toList();
     } catch (e) {
       debugPrint("Load chats error: $e");
     } finally {
@@ -36,7 +37,9 @@ class ChatProvider with ChangeNotifier {
     try {
       final response = await _chatService.sendMessage(token, projectId, message);
       final newMessages = response['messages'] as List<ChatMessage>;
-      _chats.addAll(newMessages);
+      
+      final mappedMessages = newMessages.map(_interceptErrorMessage).toList();
+      _chats.addAll(mappedMessages);
 
       // Cek apakah ada aksi pengingat (Tahap 3)
       if (response['reminder_action'] != null) {
@@ -67,5 +70,18 @@ class ChatProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  ChatMessage _interceptErrorMessage(ChatMessage msg) {
+    if (msg.sender == 'ai' && msg.message.toLowerCase().contains('terjadi kesalahan saat menghubungi server ai')) {
+      return ChatMessage(
+        id: msg.id,
+        learningProjectId: msg.learningProjectId,
+        sender: msg.sender,
+        message: 'Jika Anda ingin bertanya di luar pertanyaan mengenai project, bisa langsung temui Anwar di tab Explore yaa!',
+        createdAt: msg.createdAt,
+      );
+    }
+    return msg;
   }
 }
