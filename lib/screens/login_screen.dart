@@ -67,8 +67,8 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login gagal, periksa email dan password Anda.'),
+        SnackBar(
+          content: Text(provider.errorMessage ?? 'Login gagal, periksa email dan password Anda.'),
           backgroundColor: Colors.redAccent,
         ),
       );
