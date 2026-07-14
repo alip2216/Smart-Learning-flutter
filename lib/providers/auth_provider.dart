@@ -8,10 +8,12 @@ class AuthProvider with ChangeNotifier {
   final _authService = AuthService();
   
   bool _isLoading = false;
+  String? _errorMessage;
   String? _token;
   User? _user;
 
   bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
   String? get token => _token;
   bool get isAuthenticated => _token != null;
   User? get user => _user;
@@ -47,6 +49,7 @@ class AuthProvider with ChangeNotifier {
   /// Fungsi login yang memanggil AuthService
   Future<bool> login(String email, String password) async {
     _setLoading(true);
+    _errorMessage = null;
     try {
       final token = await _authService.login(email, password);
       
@@ -58,6 +61,7 @@ class AuthProvider with ChangeNotifier {
         return true;
       }
     } catch (e) {
+      _errorMessage = e.toString().replaceAll('Exception: ', '');
       debugPrint("Login error: $e");
     }
     _setLoading(false);
@@ -67,6 +71,7 @@ class AuthProvider with ChangeNotifier {
   /// Fungsi register yang memanggil AuthService
   Future<bool> register(String name, String email, String password, String passwordConfirmation) async {
     _setLoading(true);
+    _errorMessage = null;
     try {
       final token = await _authService.register(name, email, password, passwordConfirmation);
       
@@ -78,6 +83,7 @@ class AuthProvider with ChangeNotifier {
         return true;
       }
     } catch (e) {
+      _errorMessage = e.toString().replaceAll('Exception: ', '');
       debugPrint("Register error: $e");
     }
     _setLoading(false);
